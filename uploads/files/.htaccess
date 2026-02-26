@@ -1,0 +1,5 @@
+# Block direct access to PDF files
+<FilesMatch "\.pdf$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
