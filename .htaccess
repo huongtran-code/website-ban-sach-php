@@ -1,0 +1,53 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Set base directory
+RewriteBase /Online-Book-Store-By-using-PHP-and-MySQL-main/
+
+# Don't rewrite requests for existing files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Redirect root to pages/index.php
+RewriteRule ^$ pages/index.php [L]
+
+# Allow direct access to pages folder
+RewriteRule ^pages/(.*)$ pages/$1 [L]
+
+# Allow direct access to public folder (CSS, JS, images)
+RewriteRule ^public/(.*)$ public/$1 [L]
+
+# Allow direct access to storage folder (uploads)
+RewriteRule ^storage/(.*)$ storage/$1 [L]
+
+# Allow direct access to app/controllers (for AJAX requests)
+RewriteRule ^app/controllers/(.*)$ app/controllers/$1 [L]
+
+# Route all other requests to public/index.php
+RewriteRule ^(.*)$ public/index.php?page=$1 [QSA,L]
+
+# Security: Disable directory listing
+Options -Indexes
+
+# Security: Protect sensitive files
+<FilesMatch "^(\.htaccess|\.env|composer\.(json|lock)|AGENTS\.md)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Security: Protect config and models folders
+<FilesMatch "^(config|app/models)/.*\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# UTF-8 encoding
+AddDefaultCharset UTF-8
+
+# PHP settings (if allowed)
+<IfModule mod_php.c>
+    php_value upload_max_filesize 50M
+    php_value post_max_size 50M
+    php_value max_execution_time 300
+</IfModule>
